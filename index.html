@@ -20,8 +20,11 @@
   .display{ border:1px solid #14532d; padding:6px; text-align:center; letter-spacing:4px; }
   .btn{ border:1px solid #14532d; background:#020617; color:#22c55e; padding:6px 10px; cursor:pointer; margin:4px 2px; }
   .hidden{ display:none; }
-  .chat{ border:1px solid #14532d; padding:6px; margin:6px 0; cursor:pointer; }
-  .msg{ border-top:1px solid #14532d; margin-top:8px; padding-top:8px; }
+  .chat{ border:1px solid #14532d; padding:8px; margin:6px 0; cursor:pointer; }
+  .chat strong{ color:#38bdf8; }
+  .msg{ border-top:1px solid #14532d; margin-top:8px; padding-top:8px; font-size:.9rem; }
+  .bubble{ margin:4px 0; padding:6px 8px; border:1px solid #14532d; border-radius:6px; }
+  .me{ text-align:right; opacity:.85; }
 </style>
 </head>
 <body>
@@ -29,13 +32,13 @@
 <div class="phone">
   <h1 id="title">Log intercettati – Tastierino banca</h1>
 
-  <!-- Step 1 -->
+  <!-- Step 1: Puzzle -->
   <div id="puzzle">
     <div class="log">
-    Tentativo 1:  7 4 1 8  → 1 cifra corretta, posizione corretta <br> 
-    Tentativo 2:  9 3 4 6  → 2 cifre corrette, 1 in posizione corretta  <br>
-    Tentativo 3:  3 9 2 7  → 4 cifre corrette, posizione sbagliata  <br>
-    Tentativo 4:  0 9 1 2  → 2 cifre corrette, 1 in posizione corretta  <br>
+      Tentativo 1: 7 4 1 8 → 1 cifra corretta, posizione corretta<br>
+      Tentativo 2: 9 3 4 6 → 2 cifre corrette, 1 in posizione corretta<br>
+      Tentativo 3: 3 9 2 7 → 4 cifre corrette, posizione sbagliata<br>
+      Tentativo 4: 0 9 1 2 → 2 cifre corrette, 1 in posizione corretta
     </div>
 
     <div class="display" id="display">____</div>
@@ -61,20 +64,36 @@
     <div class="log" id="feedback"></div>
   </div>
 
-  <!-- Step 2 -->
+  <!-- Step 2: Messaggi -->
   <div id="messages" class="hidden">
     <h1>Messaggi</h1>
-    <div class="chat" onclick="openChat(1)">Collega</div>
-    <div class="chat" onclick="openChat(2)">Gruppo lavoro</div>
-    <div class="chat" onclick="openChat(3)">Tecnico IT</div>
-    <div class="chat" onclick="openChat(4)">Banca</div>
-    <div class="chat" onclick="openChat(5)">Amico</div>
+
+    <div class="chat" onclick="openChat('collega')">
+      <strong>Luca (collega)</strong><br><small>Hai visto il turno di domani?</small>
+    </div>
+
+    <div class="chat" onclick="openChat('gruppo')">
+      <strong>Gruppo lavoro</strong><br><small>Riunione spostata alle 15</small>
+    </div>
+
+    <div class="chat" onclick="openChat('it')">
+      <strong>Supporto IT</strong><br><small>Aggiornamento sicurezza</small>
+    </div>
+
+    <div class="chat" onclick="openChat('banca')">
+      <strong>Banca Centrale</strong><br><small>Notifica automatica</small>
+    </div>
+
+    <div class="chat" onclick="openChat('mamma')">
+      <strong>Mamma</strong><br><small>Ricordati di comprare il pane</small>
+    </div>
+
     <div id="chatView" class="msg hidden"></div>
   </div>
 </div>
 
 <script>
-  const PIN = "7392"; // soluzione coerente con i log
+  const PIN = "7392";
   let input = "";
 
   function press(n){
@@ -108,11 +127,41 @@
   function openChat(id){
     const v = document.getElementById("chatView");
     v.classList.remove("hidden");
-    if(id === 4){
-      v.innerHTML = "<strong>Banca</strong><br><br>Codice tastierino di oggi:<br><span style='font-size:1.2rem'>7392</span>";
-    } else {
-      v.innerHTML = "Conversazione non rilevante.";
-    }
+
+    const chats = {
+      collega: `
+        <strong>Luca</strong>
+        <div class="bubble">Oh, domani riesci a coprirmi il turno?</div>
+        <div class="bubble me">Non so, devo chiedere al capo.</div>
+        <div class="bubble">Fammi sapere entro stasera 🙏</div>
+      `,
+      gruppo: `
+        <strong>Gruppo lavoro</strong>
+        <div class="bubble">Riunione spostata alle 15:00.</div>
+        <div class="bubble">Portate il report aggiornato.</div>
+        <div class="bubble me">Ok, ricevuto.</div>
+      `,
+      it: `
+        <strong>Supporto IT</strong>
+        <div class="bubble">Stiamo forzando l’update di sicurezza sui telefoni aziendali.</div>
+        <div class="bubble">Se noti rallentamenti è normale.</div>
+        <div class="bubble me">Chiaro, grazie.</div>
+      `,
+      banca: `
+        <strong>Banca Centrale</strong>
+        <div class="bubble">Notifica automatica: aggiornamento credenziali.</div>
+        <div class="bubble">Codice tastierino di oggi:</div>
+        <div class="bubble" style="font-size:1.2rem; color:#38bdf8;">7392</div>
+      `,
+      mamma: `
+        <strong>Mamma</strong>
+        <div class="bubble">Hai preso il pane?</div>
+        <div class="bubble me">Me ne sono dimenticato 😅</div>
+        <div class="bubble">Allora passa tornando a casa.</div>
+      `
+    };
+
+    v.innerHTML = chats[id] || "Conversazione non disponibile.";
   }
 </script>
 

@@ -1,177 +1,144 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Hacking Phone</title>
-
+  <title>Hacking Phone – Hard Mode</title>
   <style>
-    body {
-      margin: 0;
-      font-family: monospace;
-      background: #020617;
-      color: #22c55e;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
+    body{
+      margin:0;
+      background:#020617;
+      color:#22c55e;
+      font-family:monospace;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      min-height:100vh;
     }
-
-    .phone {
-      width: 360px;
-      max-width: 95vw;
-      background: #020617;
-      border: 3px solid #22c55e;
-      border-radius: 24px;
-      padding: 16px;
-      box-shadow: 0 0 30px rgba(34,197,94,.3);
+    .phone{
+      width:380px; max-width:95vw;
+      border:2px solid #22c55e;
+      border-radius:20px;
+      padding:14px;
+      box-shadow:0 0 25px rgba(34,197,94,.25);
+      background:#020617;
     }
-
-    h1 {
-      text-align: center;
-      font-size: 1.2rem;
-      margin-bottom: 10px;
+    h1{ text-align:center; font-size:1.1rem; margin:6px 0 10px; }
+    .log{
+      font-size:.8rem;
+      border:1px solid #14532d;
+      padding:8px; margin-bottom:8px;
+      min-height:48px;
     }
-
-    .log {
-      font-size: 0.8rem;
-      background: #020617;
-      border: 1px solid #14532d;
-      padding: 8px;
-      margin-bottom: 10px;
-      min-height: 60px;
+    .grid{
+      display:grid; grid-template-columns:repeat(4,1fr);
+      gap:6px; margin:10px 0;
     }
-
-    .modulo {
-      margin: 10px 0;
+    .node{
+      border:1px solid #14532d;
+      padding:10px 0; text-align:center;
+      cursor:pointer; user-select:none;
     }
-
-    input[type=range] {
-      width: 100%;
+    .node.ok{ background:#14532d; }
+    .node.bad{ background:#7f1d1d; color:#fecaca; }
+    .hidden{ display:none; }
+    .cipher{ font-size:.85rem; margin:8px 0; }
+    .btn{
+      border:1px solid #14532d; background:#020617; color:#22c55e;
+      padding:8px 10px; cursor:pointer; margin:4px 2px;
     }
-
-    .status {
-      text-align: center;
-      margin-top: 10px;
-    }
-
-    .success {
-      color: #38bdf8;
-      text-align: center;
-      font-weight: bold;
-    }
-
-    .chat {
-      background: #020617;
-      border: 1px solid #14532d;
-      padding: 8px;
-      margin: 6px 0;
-      cursor: pointer;
-    }
-
-    .chat strong {
-      color: #38bdf8;
-    }
-
-    .msg {
-      font-size: 0.9rem;
-      margin-top: 8px;
-      border-top: 1px solid #14532d;
-      padding-top: 8px;
-    }
-
-    .hidden {
-      display: none;
-    }
+    .chat{ border:1px solid #14532d; padding:6px; margin:6px 0; cursor:pointer; }
+    .msg{ border-top:1px solid #14532d; margin-top:8px; padding-top:8px; font-size:.9rem; }
   </style>
 </head>
 <body>
-
   <div class="phone">
-    <h1>Accesso al dispositivo</h1>
+    <h1 id="title">Firewall – Checksum</h1>
 
-    <div id="hack">
-      <div class="log">
-        > Firewall attivo<br>
-        > Allinea i moduli di sicurezza allo stesso valore per bypassare<br>
-        > Tentativi illimitati
-      </div>
-
-      <div class="modulo">
-        Modulo A: <span id="aVal">30</span>%
-        <input type="range" min="0" max="100" value="30" id="a" oninput="update('a')">
-      </div>
-
-      <div class="modulo">
-        Modulo B: <span id="bVal">60</span>%
-        <input type="range" min="0" max="100" value="60" id="b" oninput="update('b')">
-      </div>
-
-      <div class="modulo">
-        Modulo C: <span id="cVal">90</span>%
-        <input type="range" min="0" max="100" value="90" id="c" oninput="update('c')">
-      </div>
-
-      <div class="status" id="status">Allinea i tre valori.</div>
+    <!-- Fase 1 -->
+    <div id="fase1">
+      <div class="log">> Individua la sequenza corretta dei nodi (ordine crescente).</div>
+      <div class="grid" id="grid"></div>
+      <div class="log" id="seq">Sequenza: </div>
     </div>
 
-    <div id="messages" class="hidden">
+    <!-- Fase 2 -->
+    <div id="fase2" class="hidden">
+      <div class="log">> Payload cifrato rilevato. Hint: Shift -3</div>
+      <div class="cipher">QEB NRFZH YOLTK CLU GRJMP LSBO QEB IXWV ALD</div>
+      <button class="btn" onclick="decifra(false)">Decripta (Shift -1)</button>
+      <button class="btn" onclick="decifra(true)">Decripta (Shift -3)</button>
+      <div class="log" id="decLog"></div>
+    </div>
+
+    <!-- Fase 3 -->
+    <div id="fase3" class="hidden">
       <h1>Messaggi</h1>
-
-      <div class="chat" onclick="openChat(1)">
-        <strong>Luca</strong><br>Hai visto il turno di domani?
-      </div>
-
-      <div class="chat" onclick="openChat(2)">
-        <strong>Banca Centrale</strong><br>Notifica automatica
-      </div>
-
-      <div class="chat" onclick="openChat(3)">
-        <strong>Gruppo Colleghi</strong><br>Riunionione spostata
-      </div>
-
-      <div class="chat" onclick="openChat(4)">
-        <strong>Mamma</strong><br>Ricordati la spesa
-      </div>
-
+      <div class="chat" onclick="openChat(1)">Collega</div>
+      <div class="chat" onclick="openChat(2)">Gruppo Lavoro</div>
+      <div class="chat" onclick="openChat(3)">Tecnico IT</div>
+      <div class="chat" onclick="openChat(4)">Banca</div>
+      <div class="chat" onclick="openChat(5)">Amico</div>
       <div id="chatView" class="msg hidden"></div>
     </div>
   </div>
 
-  <script>
-    function update(id) {
-      const a = document.getElementById("a").value;
-      const b = document.getElementById("b").value;
-      const c = document.getElementById("c").value;
+<script>
+  // Fase 1
+  const numbers = [3,12,7,1,14,6,10,4,9,2,16,5,11,8,15,13];
+  let current = 1;
+  const grid = document.getElementById("grid");
+  const seq = document.getElementById("seq");
 
-      document.getElementById("aVal").innerText = a;
-      document.getElementById("bVal").innerText = b;
-      document.getElementById("cVal").innerText = c;
-
-      if (a === b && b === c) {
-        document.getElementById("status").innerHTML = "<span class='success'>Accesso ottenuto. Dispositivo sbloccato.</span>";
-        setTimeout(() => {
-          document.getElementById("hack").classList.add("hidden");
-          document.getElementById("messages").classList.remove("hidden");
-        }, 1000);
-      }
-    }
-
-    function openChat(id) {
-      const view = document.getElementById("chatView");
-      view.classList.remove("hidden");
-
-      if (id === 2) {
-        view.innerHTML = `
-          <strong>Banca Centrale</strong><br><br>
-          Codice di accesso odierno:<br>
-          <span style="color:#22c55e; font-size:1.2rem;">7392</span>
-        `;
+  numbers.forEach(n=>{
+    const d = document.createElement("div");
+    d.className = "node";
+    d.innerText = n;
+    d.onclick = ()=>{
+      if(n === current){
+        d.classList.add("ok");
+        seq.innerText += n + " ";
+        current++;
+        if(current > 6){
+          document.getElementById("fase1").classList.add("hidden");
+          document.getElementById("fase2").classList.remove("hidden");
+          document.getElementById("title").innerText = "Decrittazione Payload";
+        }
       } else {
-        view.innerHTML = "Conversazione non rilevante per l’accesso alla banca.";
+        d.classList.add("bad");
+        setTimeout(()=>d.classList.remove("bad"),300);
+        current = 1;
+        seq.innerText = "Sequenza: ";
       }
-    }
-  </script>
+    };
+    grid.appendChild(d);
+  });
 
+  // Fase 2
+  function decifra(ok){
+    const log = document.getElementById("decLog");
+    if(ok){
+      log.innerText = "> Decrittazione riuscita. Accesso al dispositivo.";
+      setTimeout(()=>{
+        document.getElementById("fase2").classList.add("hidden");
+        document.getElementById("fase3").classList.remove("hidden");
+        document.getElementById("title").innerText = "Dispositivo compromesso";
+      },800);
+    } else {
+      log.innerText = "> Decrittazione fallita. Riprova.";
+    }
+  }
+
+  // Fase 3
+  function openChat(id){
+    const v = document.getElementById("chatView");
+    v.classList.remove("hidden");
+    if(id === 4){
+      v.innerHTML = "<strong>Banca</strong><br><br>Codice tastierino di oggi:<br><span style='font-size:1.2rem'>7392</span>";
+    } else {
+      v.innerHTML = "Conversazione non rilevante.";
+    }
+  }
+</script>
 </body>
 </html>

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hacking Phone</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: monospace;
+      background: #020617;
+      color: #22c55e;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    .phone {
+      width: 360px;
+      max-width: 95vw;
+      background: #020617;
+      border: 3px solid #22c55e;
+      border-radius: 24px;
+      padding: 16px;
+      box-shadow: 0 0 30px rgba(34,197,94,.3);
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 1.2rem;
+      margin-bottom: 10px;
+    }
+
+    .log {
+      font-size: 0.8rem;
+      background: #020617;
+      border: 1px solid #14532d;
+      padding: 8px;
+      margin-bottom: 10px;
+      min-height: 60px;
+    }
+
+    .modulo {
+      margin: 10px 0;
+    }
+
+    input[type=range] {
+      width: 100%;
+    }
+
+    .status {
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    .success {
+      color: #38bdf8;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .chat {
+      background: #020617;
+      border: 1px solid #14532d;
+      padding: 8px;
+      margin: 6px 0;
+      cursor: pointer;
+    }
+
+    .chat strong {
+      color: #38bdf8;
+    }
+
+    .msg {
+      font-size: 0.9rem;
+      margin-top: 8px;
+      border-top: 1px solid #14532d;
+      padding-top: 8px;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="phone">
+    <h1>Accesso al dispositivo</h1>
+
+    <div id="hack">
+      <div class="log">
+        > Firewall attivo<br>
+        > Allinea i moduli di sicurezza allo stesso valore per bypassare<br>
+        > Tentativi illimitati
+      </div>
+
+      <div class="modulo">
+        Modulo A: <span id="aVal">30</span>%
+        <input type="range" min="0" max="100" value="30" id="a" oninput="update('a')">
+      </div>
+
+      <div class="modulo">
+        Modulo B: <span id="bVal">60</span>%
+        <input type="range" min="0" max="100" value="60" id="b" oninput="update('b')">
+      </div>
+
+      <div class="modulo">
+        Modulo C: <span id="cVal">90</span>%
+        <input type="range" min="0" max="100" value="90" id="c" oninput="update('c')">
+      </div>
+
+      <div class="status" id="status">Allinea i tre valori.</div>
+    </div>
+
+    <div id="messages" class="hidden">
+      <h1>Messaggi</h1>
+
+      <div class="chat" onclick="openChat(1)">
+        <strong>Luca</strong><br>Hai visto il turno di domani?
+      </div>
+
+      <div class="chat" onclick="openChat(2)">
+        <strong>Banca Centrale</strong><br>Notifica automatica
+      </div>
+
+      <div class="chat" onclick="openChat(3)">
+        <strong>Gruppo Colleghi</strong><br>Riunionione spostata
+      </div>
+
+      <div class="chat" onclick="openChat(4)">
+        <strong>Mamma</strong><br>Ricordati la spesa
+      </div>
+
+      <div id="chatView" class="msg hidden"></div>
+    </div>
+  </div>
+
+  <script>
+    function update(id) {
+      const a = document.getElementById("a").value;
+      const b = document.getElementById("b").value;
+      const c = document.getElementById("c").value;
+
+      document.getElementById("aVal").innerText = a;
+      document.getElementById("bVal").innerText = b;
+      document.getElementById("cVal").innerText = c;
+
+      if (a === b && b === c) {
+        document.getElementById("status").innerHTML = "<span class='success'>Accesso ottenuto. Dispositivo sbloccato.</span>";
+        setTimeout(() => {
+          document.getElementById("hack").classList.add("hidden");
+          document.getElementById("messages").classList.remove("hidden");
+        }, 1000);
+      }
+    }
+
+    function openChat(id) {
+      const view = document.getElementById("chatView");
+      view.classList.remove("hidden");
+
+      if (id === 2) {
+        view.innerHTML = `
+          <strong>Banca Centrale</strong><br><br>
+          Codice di accesso odierno:<br>
+          <span style="color:#22c55e; font-size:1.2rem;">7392</span>
+        `;
+      } else {
+        view.innerHTML = "Conversazione non rilevante per l’accesso alla banca.";
+      }
+    }
+  </script>
+
+</body>
+</html>
